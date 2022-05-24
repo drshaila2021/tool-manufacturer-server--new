@@ -57,12 +57,22 @@ async function run() {
       const orders = await purchaseCollection.find(query).toArray();
       res.send(orders);
     });
+
     app.delete("/purchase/:orderId", async (req, res) => {
       const orderId = req.params.orderId;
       console.log(orderId);
       const query = { _id: ObjectId(orderId) };
       const result = await purchaseCollection.deleteOne(query);
       res.send(result);
+    });
+
+    // getting one item from toolpurchased for payment
+
+    app.get("/purchase/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const orderedItem = await purchaseCollection.findOne(query);
+      res.send(orderedItem);
     });
   } finally {
   }
