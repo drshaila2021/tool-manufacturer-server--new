@@ -58,6 +58,12 @@ async function run() {
       const tools = await cursor.toArray();
       res.send(tools);
     });
+    app.get("/tools", verifyJWT, async (req, res) => {
+      const query = {};
+      const cursor = toolCollection.find(query);
+      const tools = await cursor.toArray();
+      res.send(tools);
+    });
 
     //get one tool
     app.get("/tool/:toolId", async (req, res) => {
@@ -109,6 +115,13 @@ async function run() {
       const query = { _id: ObjectId(id) };
       const orderedItem = await purchaseCollection.findOne(query);
       res.send(orderedItem);
+    });
+
+    // get all orders(purchase)for admin
+
+    app.get("/purchases", verifyJWT, async (req, res) => {
+      const orders = await purchaseCollection.find().toArray();
+      res.send(orders);
     });
 
     app.patch("/purchase/:id", async (req, res) => {
