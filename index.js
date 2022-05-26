@@ -51,6 +51,9 @@ async function run() {
     const reviewCollection = client
       .db("tool_manufacturer")
       .collection("review");
+    const contactusCollection = client
+      .db("tool_manufacturer")
+      .collection("contactus");
 
     app.get("/tool", async (req, res) => {
       const query = {};
@@ -207,6 +210,13 @@ async function run() {
         { expiresIn: "4hr" }
       );
       res.send({ result, token });
+    });
+
+    //post contact us
+    app.post("/contactus", async (req, res) => {
+      const contactus = req.body;
+      const result = await contactusCollection.insertOne(contactus);
+      res.send(result);
     });
 
     app.post("/create-payment-intent", async (req, res) => {
