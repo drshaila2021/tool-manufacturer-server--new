@@ -71,7 +71,7 @@ async function run() {
     //get one tool
     app.get("/tool/:toolId", async (req, res) => {
       const id = req.params.toolId;
-      console.log(id);
+      //   console.log(id);
       const query = { _id: ObjectId(id) };
       const tool = await toolCollection.findOne(query);
       res.send(tool);
@@ -95,13 +95,6 @@ async function run() {
         return res.send({ massage: "Forbidden" });
       }
     });
-    // app.get("/purchase", async (req, res) => {
-    //   const email = req.query.user;
-
-    //   const query = { email: email };
-    //   const orders = await purchaseCollection.find(query).toArray();
-    //   return res.send(orders);
-    // });
 
     // get profile
 
@@ -126,7 +119,7 @@ async function run() {
 
     app.delete("/purchase/:orderId", async (req, res) => {
       const orderId = req.params.orderId;
-      console.log(orderId);
+      //   console.log(orderId);
       const query = { _id: ObjectId(orderId) };
       const result = await purchaseCollection.deleteOne(query);
       res.send(result);
@@ -146,23 +139,28 @@ async function run() {
     app.get("/purchases", verifyJWT, async (req, res) => {
       const orders = await purchaseCollection.find().toArray();
       res.send(orders);
+      console.log(orders);
     });
 
     app.patch("/purchase/:id", async (req, res) => {
       const id = req.params.id;
       const payment = req.body;
+      console.log(payment);
       const filter = { _id: ObjectId(id) };
+      console.log(id);
       const updatedDoc = {
         $set: {
           paid: true,
           transactionId: payment.transactionId,
         },
       };
+      const result = await paymentCollection.insertOne(payment);
       const updatedPurchase = await purchaseCollection.updateOne(
         filter,
         updatedDoc
       );
-      const result = await paymentCollection.insertOne(payment);
+      console.log(updatedPurchase);
+
       res.send(updatedDoc);
     });
 
@@ -198,6 +196,7 @@ async function run() {
     app.put("/user/:email", async (req, res) => {
       const email = req.params.email;
       const user = req.body;
+      console.log(user);
       const filter = { email: email };
       const options = { upsert: true };
       const updateDoc = {
@@ -221,10 +220,10 @@ async function run() {
 
     app.post("/create-payment-intent", async (req, res) => {
       const item = req.body;
-      console.log(item);
+      //   console.log(item);
       const totalCost = item.totalCost;
       const amount = totalCost * 100;
-      console.log(amount);
+      //   console.log(amount);
       const paymentIntent = await stripe.paymentIntents.create({
         amount: amount,
         currency: "usd",
