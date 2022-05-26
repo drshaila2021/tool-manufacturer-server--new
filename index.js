@@ -100,6 +100,27 @@ async function run() {
     //   return res.send(orders);
     // });
 
+    // get profile
+
+    app.get("/user/:email", async (req, res) => {
+      const email = req.params.email;
+      const query = { email: email };
+      const profile = await userCollection.findOne(query);
+      res.send(profile);
+    });
+    //put update profile
+    app.put("/profile/:email", async (req, res) => {
+      const email = req.params.email;
+      const profile = req.body;
+      const filter = { email: email };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: profile,
+      };
+      const result = await userCollection.updateOne(filter, updateDoc, options);
+      res.send({ result: result, success: true });
+    });
+
     app.delete("/purchase/:orderId", async (req, res) => {
       const orderId = req.params.orderId;
       console.log(orderId);
